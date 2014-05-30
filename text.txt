@@ -1,0 +1,24 @@
+Suppose you’d like your toString( ) to print the address of your class. It seems to make sense to simply refer to this:
+//: strings/InfiniteRecursion.java
+// Accidental recursion.
+// {RunByHand}
+import java.util.*;
+public class InfiniteRecursion {
+    public String toString() {
+        return " InfiniteRecursion address: " + this + "\n";
+    }
+    public static void main(String[] args) {
+        List<InfiniteRecursion> v =
+        new ArrayList<InfiniteRecursion>();
+        for(int i = 0; i < 10; i++)
+        v.add(new InfiniteRecursion());
+        System.out.println(v);
+    }
+} ///:~
+If you create an InfiniteRecursion object and then print it, you’ll get a very long sequence of exceptions.
+This is also true if you place the InfiniteRecursion objects in an ArrayList and print that ArrayList as shown here.
+What’s happening is automatic type conversion for Strings .
+When you say: "InfiniteRecursion address: " + this The compiler sees a String followed by a’+’ and something that’s not a String , so it tries to convert this to a String .
+It does this conversion by calling toString( ) , which produces a recursive call.
+If you really do want to print the address of the object, the solution is to call the ObjecttoString( ) method, which does just that.
+So instead of saying this , you’d say super.toString( ).
